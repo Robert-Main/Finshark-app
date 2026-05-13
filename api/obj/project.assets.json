@@ -3260,11 +3260,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark\\api\\api.csproj",
+      "projectUniqueName": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark.worktrees\\agents-comment-crud-operations-implementation\\api\\api.csproj",
       "projectName": "api",
-      "projectPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark\\api\\api.csproj",
+      "projectPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark.worktrees\\agents-comment-crud-operations-implementation\\api\\api.csproj",
       "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark\\api\\obj\\",
+      "outputPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark.worktrees\\agents-comment-crud-operations-implementation\\api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config"
