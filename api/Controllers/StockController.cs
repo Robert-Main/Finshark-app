@@ -1,93 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using api.Data;
 using api.Dtos.Stock;
+using api.interfaces;
 using api.Mappers;
-using api.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StockController : Controller
+    public class StockController : ControllerBase
     {
-        private readonly ILogger<StockController> _logger;
-        private readonly ApplicationDBContext _context;
+        private readonly IstockRepository _stockRepository;
 
-        public StockController(ILogger<StockController> logger, ApplicationDBContext context)
+        public StockController(IstockRepository stockRepository)
         {
-            _logger = logger;
-            _context = context;
+            _stockRepository = stockRepository;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetStocks()
         {
-            var stocks = await _context.Stocks.ToListAsync();
+            var stocks = await _stockRepository.GetAllStocksAsync();
             var stockData = stocks.Select(s => StockMappers.MapStockToStockResponseDtos(s)).ToList();
-
-            return Ok(new
-            {
-                success = true,
-                message = "Stocks retrieved successfully",
-                data = stockData
-            });
+            return Ok(new { success = true, message = "Stocks retrieved successfully", data = stockData });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStock(int id)
         {
-            var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+            var stock = await _stockRepository.GetStockByIdAsync(id);
+            if (stock == null)
+                return NotFound(new { success = false, message = "Stock with that id not found" });
 
-
-            if (stock == null || stock.Id != id)
-            {
-                return NotFound(new
-                {
-                    success = false,
-                    message = "Stock with that id not found"
-                });
-
-            }
-
-            var stockData = StockMappers.MapStockToStockResponseDtos(stock);
-            return Ok(new
-            {
-                success = true,
-                message = "Stock retrieved successfully",
-                data = stockData
-            });
+            return Ok(new { success = true, message = "Stock retrieved successfully", data = StockMappers.MapStockToStockResponseDtos(stock) });
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateStock([FromBody] CreateStockDtos stock)
         {
             if (stock == null)
-            {
-                return BadRequest(new
-                {
-                    success = false,
-                    message = "Stock data is required"
-                });
-            }
+                return BadRequest(new { success = false, message = "Stock data is required" });
 
-            var stockModel = StockMappers.ToStockFromCreateStockDtos(stock);
-            _context.Stocks.Add(stockModel);
-            await _context.SaveChangesAsync();
-            var stockData = StockMappers.MapStockToStockResponseDtos(stockModel);
-
-            return CreatedAtAction(nameof(GetStock), new { id = stockModel.Id }, new
-            {
-                success = true,
-                message = "Stock created successfully",
-                data = stockData
-            });
+            var stockModel = await _stockRepository.CreateStockAsync(stock); // ✅ pass DTO directly
+            return CreatedAtAction(nameof(GetStock), new { id = stockModel.Id }, new { success = true, message = "Stock created successfully", data = StockMappers.MapStockToStockResponseDtos(stockModel) });
         }
 
         [HttpPut("{id}")]
@@ -96,48 +50,21 @@ namespace api.Controllers
             if (stock == null)
                 return BadRequest(new { success = false, message = "Stock data is required" });
 
-            var stockModel = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+            var stockModel = await _stockRepository.UpdateStockAsync(id, stock); // ✅ pass DTO directly
             if (stockModel == null)
-                return NotFound(new
-                {
-                    success = false,
-                    message = "Stock with that id not found"
-                });
+                return NotFound(new { success = false, message = "Stock with that id not found" });
 
-            StockMappers.UpdateStockFromUpdateStockDtos(stockModel, stock);
-
-            await _context.SaveChangesAsync();
-
-            var stockData = StockMappers.MapStockToStockResponseDtos(stockModel);
-
-            return Ok(new
-            {
-                success = true,
-                message = "Stock updated successfully",
-                data = stockData
-            });
+            return Ok(new { success = true, message = "Stock updated successfully", data = StockMappers.MapStockToStockResponseDtos(stockModel) });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStock(int id)
         {
-            var stockModel = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
-            if (stockModel == null)
-                return NotFound(new
-                {
-                    success = false,
-                    message = "Stock with that id not found"
-                });
+            var stock = await _stockRepository.DeleteStockAsync(id);
+            if (stock == null)
+                return NotFound(new { success = false, message = "Stock with that id not found" });
 
-            _context.Stocks.Remove(stockModel);
-            await _context.SaveChangesAsync();
-
-            return Ok(new
-            {
-                success = true,
-                message = "Stock deleted successfully"
-            });
+            return Ok(new { success = true, message = "Stock deleted successfully" });
         }
-
     }
 }
