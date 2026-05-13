@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.Dtos.Stock;
 using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +56,7 @@ namespace api.Controllers
 
             }
 
-            var stockData = StockMappers.MapStockToStockResponseDtos(stock );
+            var stockData = StockMappers.MapStockToStockResponseDtos(stock);
             return Ok(new
             {
                 success = true,
@@ -65,18 +66,78 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStock([FromBody] Stock stock)
+        public async Task<IActionResult> CreateStock([FromBody] CreateStockDtos stock)
         {
-            _context.Stocks.Add(stock);
+            if (stock == null)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Stock data is required"
+                });
+            }
+
+            var stockModel = StockMappers.ToStockFromCreateStockDtos(stock);
+            _context.Stocks.Add(stockModel);
             await _context.SaveChangesAsync();
-            var stockData = StockMappers.MapStockToStockResponseDtos(stock);
-            return CreatedAtAction(nameof(GetStock), new { id = stock.Id }, stockData);
+            var stockData = StockMappers.MapStockToStockResponseDtos(stockModel);
+
+            return CreatedAtAction(nameof(GetStock), new { id = stockModel.Id }, new
+            {
+                success = true,
+                message = "Stock created successfully",
+                data = stockData
+            });
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStock([FromRoute] int id, [FromBody] UpdateStockDtos stock)
         {
-            return View("Error!");
+            if (stock == null)
+                return BadRequest(new { success = false, message = "Stock data is required" });
+
+            var stockModel = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+            if (stockModel == null)
+                return NotFound(new
+                {
+                    success = false,
+                    message = "Stock with that id not found"
+                });
+
+            StockMappers.UpdateStockFromUpdateStockDtos(stockModel, stock);
+
+            await _context.SaveChangesAsync();
+
+            var stockData = StockMappers.MapStockToStockResponseDtos(stockModel);
+
+            return Ok(new
+            {
+                success = true,
+                message = "Stock updated successfully",
+                data = stockData
+            });
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStock(int id)
+        {
+            var stockModel = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+            if (stockModel == null)
+                return NotFound(new
+                {
+                    success = false,
+                    message = "Stock with that id not found"
+                });
+
+            _context.Stocks.Remove(stockModel);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                success = true,
+                message = "Stock deleted successfully"
+            });
+        }
+
     }
 }

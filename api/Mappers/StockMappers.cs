@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos;
+using api.Dtos.Stock;
 using api.Models;
 
 namespace api.Mappers
@@ -22,5 +23,28 @@ namespace api.Mappers
                 MarketCap = stock.MarketCap
             };
         }
+        public static Stock ToStockFromCreateStockDtos(CreateStockDtos createStockDtos)
+        {
+            return new Stock
+            {
+                Symbol = createStockDtos.Symbol,
+                CompanyName = createStockDtos.CompanyName,
+                Purchase = createStockDtos.Purchase,
+                LastDiv = createStockDtos.LastDiv,
+                Industry = createStockDtos.Industry,
+                MarketCap = createStockDtos.MarketCap
+            };
+        }
+
+        public static void UpdateStockFromUpdateStockDtos(Stock stock, UpdateStockDtos updateStockDtos)
+        {
+            stock.Symbol = updateStockDtos.Symbol;
+            stock.CompanyName = updateStockDtos.CompanyName;
+            stock.Purchase = updateStockDtos.Purchase;
+            stock.LastDiv = updateStockDtos.LastDiv;
+            stock.Industry = updateStockDtos.Industry;
+            stock.MarketCap = updateStockDtos.MarketCap;
+        }
     }
+
 }
