@@ -1,4 +1,5 @@
 using api.Data;
+using Scalar.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 DotNetEnv.Env.Load();
@@ -8,16 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
 
 app.UseHttpsRedirection();
 
@@ -40,27 +37,13 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
-app.MapGet("/swagger-test", (int? items) =>
+if (app.Environment.IsDevelopment())
 {
-    var count = Math.Clamp(items ?? 25, 1, 1000);
-    var results = Enumerable.Range(1, count)
-        .Select(i => new
-        {
-            id = i,
-            name = $"Swagger item {i}",
-            value = (i * 37 + 13).ToString("X")
-        })
-        .ToArray();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
 
-    return Results.Ok(new
-    {
-        endpoint = "swagger-test",
-        items = count,
-        timestamp = DateTime.UtcNow,
-        results
-    });
-})
-.WithName("SwaggerTest");
+app.MapControllers();
 
 app.Run();
 

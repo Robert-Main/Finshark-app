@@ -853,6 +853,22 @@
           }
         }
       },
+      "Scalar.AspNetCore/2.14.11": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/Scalar.AspNetCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Scalar.AspNetCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Superpower/3.0.0": {
         "type": "package",
         "compile": {
@@ -2839,6 +2855,25 @@
         "packageIcon.png"
       ]
     },
+    "Scalar.AspNetCore/2.14.11": {
+      "sha512": "EthfC0++GjWX5JB84OUTsNlzRMr8v6zGinx8i2msKWitAkvGbvjBz7ET9XoUis4Z3M+iH6jIJ66uUGzZqmrSGg==",
+      "type": "package",
+      "path": "scalar.aspnetcore/2.14.11",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net10.0/Scalar.AspNetCore.dll",
+        "lib/net10.0/Scalar.AspNetCore.xml",
+        "lib/net8.0/Scalar.AspNetCore.dll",
+        "lib/net8.0/Scalar.AspNetCore.xml",
+        "lib/net9.0/Scalar.AspNetCore.dll",
+        "lib/net9.0/Scalar.AspNetCore.xml",
+        "scalar.aspnetcore.2.14.11.nupkg.sha512",
+        "scalar.aspnetcore.nuspec"
+      ]
+    },
     "Superpower/3.0.0": {
       "sha512": "bjKbAYWePooCAvPxQq+3KnmcLfRggMyRoXmtBMlmCG71bdwBHrO6rmRJ2DRIodg5aztNcxeZXBUVWT+H+MZUhw==",
       "type": "package",
@@ -3215,7 +3250,8 @@
       "Microsoft.AspNetCore.OpenApi >= 10.0.7",
       "Microsoft.EntityFrameworkCore.Design >= 10.0.7",
       "Microsoft.EntityFrameworkCore.SqlServer >= 10.0.7",
-      "Microsoft.EntityFrameworkCore.Tools >= 10.0.7"
+      "Microsoft.EntityFrameworkCore.Tools >= 10.0.7",
+      "Scalar.AspNetCore >= 2.14.11"
     ]
   },
   "packageFolders": {
@@ -3224,11 +3260,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\FinShark\\api\\api.csproj",
+      "projectUniqueName": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark\\api\\api.csproj",
       "projectName": "api",
-      "projectPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\FinShark\\api\\api.csproj",
+      "projectPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark\\api\\api.csproj",
       "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\FinShark\\api\\obj\\",
+      "outputPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark\\api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -3280,6 +3316,10 @@
           "Microsoft.EntityFrameworkCore.Tools": {
             "target": "Package",
             "version": "[10.0.7, )"
+          },
+          "Scalar.AspNetCore": {
+            "target": "Package",
+            "version": "[2.14.11, )"
           }
         },
         "imports": [
