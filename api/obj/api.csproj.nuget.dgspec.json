@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark.worktrees\\agents-comment-crud-operations-implementation\\api\\api.csproj": {}
+    "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark\\api\\api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark.worktrees\\agents-comment-crud-operations-implementation\\api\\api.csproj": {
+    "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark.worktrees\\agents-comment-crud-operations-implementation\\api\\api.csproj",
+        "projectUniqueName": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark.worktrees\\agents-comment-crud-operations-implementation\\api\\api.csproj",
+        "projectPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark\\api\\api.csproj",
         "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark.worktrees\\agents-comment-crud-operations-implementation\\api\\obj\\",
+        "outputPath": "C:\\Users\\hp\\Documents\\work\\mine\\ASP.net\\donet-api\\finshark\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -48,6 +48,10 @@
               "target": "Package",
               "version": "[3.2.0, )"
             },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[10.0.8, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[10.0.7, )"
@@ -63,6 +67,10 @@
             "Microsoft.EntityFrameworkCore.Tools": {
               "target": "Package",
               "version": "[10.0.7, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.5-beta1, )"
             },
             "Scalar.AspNetCore": {
               "target": "Package",
