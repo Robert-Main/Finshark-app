@@ -1,5 +1,6 @@
 using api.Data;
 using api.Dtos.Stock;
+using api.Helpers;
 using api.interfaces;
 using api.Mappers;
 using api.Models;
@@ -16,9 +17,39 @@ namespace api.Repositories
             _context = context;
         }
 
-        public async Task<List<Stock>> GetAllStocksAsync()
+        public async Task<List<Stock>> GetAllStocksAsync(QueryObject query)
         {
-            return await _context.Stocks.Include(s => s.Comments).ToListAsync();
+            var stocks = _context.Stocks.Include(s => s.Comments).AsQueryable();
+
+            if (!string.IsNullOrEmpty(query.Symbol))
+            {
+                stocks = stocks.Where(s => s.Symbol.ToUpper() == query.Symbol.ToUpper());
+            }
+
+            if (!string.IsNullOrEmpty(query.CompanyName))
+            {
+                stocks = stocks.Where(s => s.CompanyName.ToUpper() == query.CompanyName.ToUpper());
+            }
+
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                stocks = query.SortBy.ToLower() switch
+                {
+                    "symbol" => query.IsDescending ? stocks.OrderByDescending(s => s.Symbol) : stocks.OrderBy(s => s.Symbol),
+                    "companyname" => query.IsDescending ? stocks.OrderByDescending(s => s.CompanyName) : stocks.OrderBy(s => s.CompanyName),
+                    _ => stocks
+                };
+            }
+            else if (query.IsDescending)
+            {
+                stocks = stocks.OrderByDescending(s => s.Id);
+            }
+
+
+            var skip = (query.PageNumber - 1) * query.PageSize;
+            stocks = stocks.Skip(skip).Take(query.PageSize);
+
+            return await stocks.ToListAsync();
         }
 
 
@@ -70,5 +101,6 @@ namespace api.Repositories
         {
             return await _context.Stocks.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Symbol.ToUpper() == symbol.ToUpper());
         }
+
     }
 }

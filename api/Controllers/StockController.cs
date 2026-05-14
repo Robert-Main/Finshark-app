@@ -1,4 +1,5 @@
 using api.Dtos.Stock;
+using api.Helpers;
 using api.interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +18,16 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetStocks()
+        public async Task<IActionResult> GetStocks([FromQuery] QueryObject query)
         {
-            var stocks = await _stockRepository.GetAllStocksAsync();
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Invalid model state"
+                });
+
+            var stocks = await _stockRepository.GetAllStocksAsync(query);
             var stockData = stocks.Select(s => StockMappers.MapStockToStockResponseDtos(s)).ToList();
             return Ok(new { success = true, message = "Stocks retrieved successfully", data = stockData });
         }
@@ -37,6 +45,9 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStock([FromBody] CreateStockDtos stock)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new { success = false, message = "Invalid model state" });
+
             if (stock == null)
                 return BadRequest(new { success = false, message = "Stock data is required" });
 
@@ -47,6 +58,9 @@ namespace api.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateStock([FromRoute] int id, [FromBody] UpdateStockDtos stock)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new { success = false, message = "Invalid model state" });
+
             if (stock == null)
                 return BadRequest(new { success = false, message = "Stock data is required" });
 

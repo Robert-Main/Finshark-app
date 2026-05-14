@@ -54,6 +54,8 @@ namespace api.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetComment(int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new { success = false, message = "Invalid model state" });
             var comment = await _commentRepository.GetCommentByIdAsync(id);
             if (comment == null)
                 return NotFound(new
@@ -73,6 +75,13 @@ namespace api.Controllers
         [HttpGet("stock/{stockId:int}")]
         public async Task<IActionResult> GetCommentsByStockId(int stockId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Invalid model state"
+                });
+
             var comments = await _commentRepository.GetCommentsByStockIdAsync(stockId);
             var commentData = comments.Select(c => CommentMappers.MapCommentResponseDtos(c)).ToList();
             return Ok(new
@@ -86,6 +95,13 @@ namespace api.Controllers
         [HttpPost("{stockId:int}")]
         public async Task<IActionResult> CreateComment([FromRoute] int stockId, [FromBody] CreateCommentDtos comment)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Invalid model state"
+                });
+
             if (!await _stockRepository.StockExistsAsync(stockId))
                 return NotFound(new
                 {
@@ -112,6 +128,14 @@ namespace api.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateComment([FromRoute] int id, [FromBody] UpdateCommentDtos comment)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new
+
+                {
+                    success = false,
+                    message = "Invalid model state"
+                });
+
             if (comment == null)
                 return BadRequest(new
                 {
