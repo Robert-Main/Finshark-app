@@ -51,7 +51,7 @@ namespace api.Controllers
             });
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetComment(int id)
         {
             var comment = await _commentRepository.GetCommentByIdAsync(id);
@@ -70,7 +70,7 @@ namespace api.Controllers
             });
         }
 
-        [HttpGet("stock/{stockId}")]
+        [HttpGet("stock/{stockId:int}")]
         public async Task<IActionResult> GetCommentsByStockId(int stockId)
         {
             var comments = await _commentRepository.GetCommentsByStockIdAsync(stockId);
@@ -109,7 +109,7 @@ namespace api.Controllers
             });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateComment([FromRoute] int id, [FromBody] UpdateCommentDtos comment)
         {
             if (comment == null)
@@ -135,7 +135,7 @@ namespace api.Controllers
             });
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
             var comment = await _commentRepository.DeleteCommentAsync(id);
