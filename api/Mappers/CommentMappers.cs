@@ -5,7 +5,7 @@ namespace api.Mappers
 {
     public class CommentMappers
     {
-        public static CommentResponseDtos MapCommentToCommentResponseDtos(Comment comment)
+        public static CommentResponseDtos MapCommentResponseDtos(Comment comment)
         {
             return new CommentResponseDtos
             {
@@ -17,14 +17,13 @@ namespace api.Mappers
             };
         }
 
-        public static Comment ToCommentFromCreateCommentDtos(CreateCommentDtos createCommentDtos)
+        public static Comment ToCommentFromCreateCommentDtos(CreateCommentDtos createCommentDtos, int stockId)
         {
             return new Comment
             {
                 Title = createCommentDtos.Title,
                 Content = createCommentDtos.Content,
-                StockId = createCommentDtos.StockId,
-                CreatedAt = DateTime.UtcNow
+                StockId = stockId,
             };
         }
 
@@ -32,7 +31,6 @@ namespace api.Mappers
         {
             comment.Title = updateCommentDtos.Title;
             comment.Content = updateCommentDtos.Content;
-            comment.StockId = updateCommentDtos.StockId;
         }
     }
 }

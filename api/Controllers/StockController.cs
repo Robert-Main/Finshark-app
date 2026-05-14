@@ -24,8 +24,8 @@ namespace api.Controllers
             return Ok(new { success = true, message = "Stocks retrieved successfully", data = stockData });
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetStock(int id)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetStock([FromRoute] int id)
         {
             var stock = await _stockRepository.GetStockByIdAsync(id);
             if (stock == null)
@@ -44,7 +44,7 @@ namespace api.Controllers
             return CreatedAtAction(nameof(GetStock), new { id = stockModel.Id }, new { success = true, message = "Stock created successfully", data = StockMappers.MapStockToStockResponseDtos(stockModel) });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateStock([FromRoute] int id, [FromBody] UpdateStockDtos stock)
         {
             if (stock == null)
@@ -57,8 +57,8 @@ namespace api.Controllers
             return Ok(new { success = true, message = "Stock updated successfully", data = StockMappers.MapStockToStockResponseDtos(stockModel) });
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStock(int id)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteStock([FromRoute] int id)
         {
             var stock = await _stockRepository.DeleteStockAsync(id);
             if (stock == null)

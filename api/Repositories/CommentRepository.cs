@@ -31,9 +31,9 @@ namespace api.Repositories
             return await _context.Comments.Where(c => c.StockId == stockId).ToListAsync();
         }
 
-        public async Task<Comment> CreateCommentAsync(CreateCommentDtos comment)
+        public async Task<Comment> CreateCommentAsync(int stockId, CreateCommentDtos comment)
         {
-            var commentModel = CommentMappers.ToCommentFromCreateCommentDtos(comment);
+            var commentModel = CommentMappers.ToCommentFromCreateCommentDtos(comment, stockId);
             _context.Comments.Add(commentModel);
             await _context.SaveChangesAsync();
             return commentModel;

@@ -18,5 +18,6 @@ namespace api.Dtos
         public string Industry { get; set; } = string.Empty;
         public decimal MarketCap { get; set; } = 0;
 
+        public List<CommentResponseDtos> Comments { get; set; }
     }
 }
