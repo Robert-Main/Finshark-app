@@ -242,3 +242,5 @@ C:\Users\hp\Documents\work\mine\ASP.net\donet-api\finshark\tmpbuild\bin\api.deps
 C:\Users\hp\Documents\work\mine\ASP.net\donet-api\finshark\tmpbuild\bin\api.runtimeconfig.json
 C:\Users\hp\Documents\work\mine\ASP.net\donet-api\finshark\tmpbuild\bin\api.dll
 C:\Users\hp\Documents\work\mine\ASP.net\donet-api\finshark\tmpbuild\bin\api.pdb
+C:\Users\hp\Documents\work\mine\ASP.net\donet-api\finshark\api\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\hp\Documents\work\mine\ASP.net\donet-api\finshark\api\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
