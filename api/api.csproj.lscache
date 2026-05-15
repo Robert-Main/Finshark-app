@@ -61,6 +61,7 @@ Controllers/
  StockController.cs
 Data/ApplicationDBContext.cs
 Dtos/Account/
+ LoginDtos.cs
  NewUerDto.cs
  RegisterDtos.cs
 Dtos/comments/

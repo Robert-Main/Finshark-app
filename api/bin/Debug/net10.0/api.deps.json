@@ -15,6 +15,7 @@
           "Microsoft.AspNetCore.OpenApi": "10.0.8",
           "Microsoft.EntityFrameworkCore.Design": "10.0.8",
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.8",
+          "Microsoft.OpenApi": "2.0.0",
           "Newtonsoft.Json": "13.0.5-beta1",
           "Scalar.AspNetCore": "2.14.11"
         },

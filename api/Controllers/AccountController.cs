@@ -15,7 +15,7 @@ namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : Controller
+    public class AccountController : ControllerBase
     {
         private readonly ITokenServices _tokenServices;
         private readonly UserManager<AppUser> _userManager;
@@ -41,7 +41,7 @@ namespace api.Controllers
 
                 var user = new AppUser
                 {
-                    UserName = model.Email,
+                    UserName = model.UserName,
                     Email = model.Email
                 };
 
@@ -63,7 +63,7 @@ namespace api.Controllers
                     {
                         success = true,
                          message = "User registered successfully",
-                         data = new NewUerDto
+                         data = new NewUserDto
                          {
                              UserName = user.UserName,
                              Email = user.Email,
@@ -87,6 +87,33 @@ namespace api.Controllers
                     message = "An unexpected error occurred. Please try again later."
                 });
             }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDtos model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new { success = false, message = "Invalid model state" });
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return Unauthorized(new { success = false, message = "Invalid username or password" });
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+            if (!result.Succeeded)
+                return Unauthorized(new { success = false, message = "Invalid username or password" });
+
+            return Ok(new
+            {
+                success = true,
+                message = "Login successful",
+                data = new NewUserDto
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Token = _tokenServices.CreateToken(user)
+                }
+            });
         }
     }
 }
