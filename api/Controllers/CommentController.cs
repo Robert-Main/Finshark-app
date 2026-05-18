@@ -1,12 +1,14 @@
 using api.Dtos;
 using api.interfaces;
 using api.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CommentController : ControllerBase
     {
         private readonly ICommentRepository _commentRepository;
