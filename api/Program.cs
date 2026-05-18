@@ -75,7 +75,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 
-    // ✅ Only Scalar namespace used — no OpenAPI model types needed
     app.MapScalarApiReference(options =>
     {
         options
