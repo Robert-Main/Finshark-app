@@ -26,7 +26,8 @@ namespace api.Services
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email ?? throw new InvalidOperationException("User email is required.")),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName ?? throw new InvalidOperationException("User name is required."))
+                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName ?? throw new InvalidOperationException("User name is required.")),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature);

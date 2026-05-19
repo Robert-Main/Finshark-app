@@ -19,7 +19,7 @@ namespace api.Repositories
 
         public async Task<List<Stock>> GetAllStocksAsync(QueryObject query)
         {
-            var stocks = _context.Stocks.Include(s => s.Comments).AsQueryable();
+            var stocks = _context.Stocks.Include(s => s.Comments).ThenInclude(c => c.AppUser).AsQueryable();
 
             if (!string.IsNullOrEmpty(query.Symbol))
             {
@@ -55,7 +55,7 @@ namespace api.Repositories
 
         public async Task<Stock?> GetStockByIdAsync(int id)
         {
-            return await _context.Stocks.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == id);
+            return await _context.Stocks.Include(s => s.Comments).ThenInclude(c => c.AppUser).FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<Stock> CreateStockAsync(CreateStockDtos stock)
@@ -68,7 +68,7 @@ namespace api.Repositories
 
         public async Task<Stock?> UpdateStockAsync(int id, UpdateStockDtos updateStockDtos)
         {
-            var existing = await _context.Stocks.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == id);
+            var existing = await _context.Stocks.Include(s => s.Comments).ThenInclude(c => c.AppUser).FirstOrDefaultAsync(s => s.Id == id);
             if (existing == null) return null;
 
             StockMappers.UpdateStockFromUpdateStockDtos(existing, updateStockDtos);
@@ -79,7 +79,7 @@ namespace api.Repositories
 
         public async Task<Stock?> DeleteStockAsync(int id)
         {
-            var stock = await _context.Stocks.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == id);
+            var stock = await _context.Stocks.Include(s => s.Comments).ThenInclude(c => c.AppUser).FirstOrDefaultAsync(s => s.Id == id);
             if (stock == null) return null;
 
             _context.Stocks.Remove(stock);
@@ -99,7 +99,7 @@ namespace api.Repositories
 
         public async Task<Stock?> GetStockBySymbolAsync(string symbol)
         {
-            return await _context.Stocks.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Symbol.ToUpper() == symbol.ToUpper());
+            return await _context.Stocks.Include(s => s.Comments).ThenInclude(c => c.AppUser).FirstOrDefaultAsync(s => s.Symbol.ToUpper() == symbol.ToUpper());
         }
 
     }

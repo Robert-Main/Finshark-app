@@ -1,7 +1,10 @@
 using api.Dtos;
+using api.Extensions;
 using api.interfaces;
 using api.Mappers;
+using api.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -13,11 +16,13 @@ namespace api.Controllers
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IstockRepository _stockRepository;
+        private readonly UserManager<AppUser> _userManager;
 
-        public CommentController(ICommentRepository commentRepository, IstockRepository stockRepository)
+        public CommentController(ICommentRepository commentRepository, IstockRepository stockRepository, UserManager<AppUser> userManager)
         {
             _commentRepository = commentRepository;
             _stockRepository = stockRepository;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -26,6 +31,7 @@ namespace api.Controllers
             if (!string.IsNullOrWhiteSpace(symbol))
             {
                 var stock = await _stockRepository.GetStockBySymbolAsync(symbol);
+                var user = await _userManager.GetUserAsync(User);
                 if (stock == null)
                     return NotFound(new
                     {
@@ -98,27 +104,19 @@ namespace api.Controllers
         public async Task<IActionResult> CreateComment([FromRoute] int stockId, [FromBody] CreateCommentDtos comment)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new
-                {
-                    success = false,
-                    message = "Invalid model state"
-                });
+                return BadRequest(new { success = false, message = "Invalid model state" });
 
             if (!await _stockRepository.StockExistsAsync(stockId))
-                return NotFound(new
-                {
-                    success = false,
-                    message = "Stock with that id not found"
-                });
+                return NotFound(new { success = false, message = "Stock with that id not found" });
 
-            if (comment == null)
-                return BadRequest(new
-                {
-                    success = false,
-                    message = "Comment data is required"
-                });
+            var userId = User.GetUserId();
 
-            var commentModel = await _commentRepository.CreateCommentAsync(stockId, comment);
+            if (userId == null)
+                return Unauthorized(new { success = false, message = "Invalid token" });
+
+            var commentModel = await _commentRepository.CreateCommentAsync(stockId, userId, comment);
+
+
             return CreatedAtAction(nameof(GetComment), new { id = commentModel.Id }, new
             {
                 success = true,

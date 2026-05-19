@@ -12,8 +12,9 @@ namespace api.Mappers
                 Id = comment.Id,
                 Title = comment.Title,
                 Content = comment.Content,
+                StockId = comment.StockId,
+                CreatedBy = comment.AppUser?.UserName ?? "Unknown",
                 CreatedAt = comment.CreatedAt,
-                StockId = comment.StockId
             };
         }
 
