@@ -17,6 +17,16 @@ namespace api.Mappers
                     .Where(p => p.Stock != null)
                     .Select(p => MapStockSummary(p.Stock!))
                     .ToList(),
+                Portfolios = user.Portfolios
+                    .Where(p => p.Stock != null)
+                    .Select(p => new PortfolioResponseDto
+                    {
+                        AppUserId = p.AppUserId,
+                        StockId = p.StockId,
+                        Symbol = p.Stock!.Symbol,
+                        CompanyName = p.Stock.CompanyName
+                    })
+                    .ToList(),
                 Comments = user.Comments
                     .Select(c =>
                     {
