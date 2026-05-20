@@ -13,6 +13,7 @@ namespace api.Mappers
             {
                 UserName = user.UserName,
                 Email = user.Email,
+                AppUserId = user.Id,
                 Stocks = user.Portfolios
                     .Where(p => p.Stock != null)
                     .Select(p => MapStockSummary(p.Stock!))
