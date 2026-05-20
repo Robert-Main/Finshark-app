@@ -35,6 +35,16 @@ namespace api.Data
                 .WithMany(s => s.Portfolios)
                 .HasForeignKey(p => p.StockId);
 
+            builder.Entity<Comment>()
+                .HasOne(c => c.AppUser)
+                .WithMany(u => u.Comments)
+                .HasForeignKey(c => c.AppUserId);
+
+            builder.Entity<Comment>()
+                .HasOne(c => c.Stock)
+                .WithMany(s => s.Comments)
+                .HasForeignKey(c => c.StockId);
+
             List<IdentityRole> roles = new()
                 {
                     new() { Id = "c6ca4556-85fc-4ed5-b870-e87714a7d044", Name = "Admin", NormalizedName = "ADMIN", ConcurrencyStamp = "d35d3f42-6db1-4565-9fd3-b0e563ed245f" },

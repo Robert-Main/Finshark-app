@@ -4,6 +4,10 @@ using api.Models;
 using api.Dtos;
 using api.interfaces;
 using api.Dtos.Account;
+using api.Data;
+using api.Mappers;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers;
 
@@ -13,9 +17,53 @@ public class AccountController(
     ITokenServices tokenServices,
     UserManager<AppUser> userManager,
     SignInManager<AppUser> signInManager,
+    ApplicationDBContext db,
     ILogger<AccountController> logger
 ) : ControllerBase
 {
+
+    [HttpGet("users")]
+    [Authorize]
+    public async Task<IActionResult> GetUsers()
+    {
+        var users = await db.Users
+            .Include(u => u.Portfolios)
+                .ThenInclude(p => p.Stock)
+            .Include(u => u.Comments)
+            .ToListAsync();
+
+        return Ok(new
+        {
+            success = true,
+            message = "Users retrieved successfully",
+            data = users.Select(UserMappers.MapToUserResponseDto)
+        });
+    }
+
+    [HttpGet("users/{id}")]
+    [Authorize]
+    public async Task<IActionResult> GetUserById(string id)
+    {
+        var user = await db.Users
+            .Include(u => u.Portfolios)
+                .ThenInclude(p => p.Stock)
+            .Include(u => u.Comments)
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user == null)
+            return NotFound(new
+            {
+                success = false,
+                message = "User not found"
+            });
+
+        return Ok(new
+        {
+            success = true,
+            message = "User retrieved successfully",
+            data = UserMappers.MapToUserResponseDto(user)
+        });
+    }
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDtos model)
     {

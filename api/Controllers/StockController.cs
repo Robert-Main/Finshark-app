@@ -1,8 +1,11 @@
 using api.Dtos.Stock;
+using api.Extensions;
 using api.Helpers;
 using api.interfaces;
 using api.Mappers;
+using api.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -13,10 +16,17 @@ namespace api.Controllers
     public class StockController : ControllerBase
     {
         private readonly IstockRepository _stockRepository;
+        private readonly IPortfolioRepository _portfolioRepository;
+        private readonly UserManager<AppUser> _userManager;
 
-        public StockController(IstockRepository stockRepository)
+        public StockController(
+            IstockRepository stockRepository,
+            IPortfolioRepository portfolioRepository,
+            UserManager<AppUser> userManager)
         {
             _stockRepository = stockRepository;
+            _portfolioRepository = portfolioRepository;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -53,7 +63,18 @@ namespace api.Controllers
             if (stock == null)
                 return BadRequest(new { success = false, message = "Stock data is required" });
 
-            var stockModel = await _stockRepository.CreateStockAsync(stock); // ✅ pass DTO directly
+            var username = User.GetUserName();
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                return Unauthorized(new { success = false, message = "User not found" });
+
+            var stockModel = await _stockRepository.CreateStockAsync(stock);
+            await _portfolioRepository.CreateAsync(new Portfolio
+            {
+                AppUserId = user.Id,
+                StockId = stockModel.Id
+            });
+
             return CreatedAtAction(nameof(GetStock), new { id = stockModel.Id }, new { success = true, message = "Stock created successfully", data = StockMappers.MapStockToStockResponseDtos(stockModel) });
         }
 
